@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Person from "./Person/Person"
 
+//container because has state
 class App extends Component {
   state = {
     persons: [
@@ -21,14 +22,32 @@ class App extends Component {
     })
   }
 
+  nameChangedHandler = (event) => {
+    this.setState({
+      persons: [
+        { name: "Lunita", age: 20 },
+        { name: event.target.value, age: 23 },
+        { name: "Lenovo", age: 26 }
+      ]
+    })
+  }
+
   render() {
     return (
       <div className="App">
         <h1>Hi i'm in react</h1>
         <button onClick={this.switchNameHandler}>Botón</button>
-        <Person name={this.state.persons[0].name} age={this.state.persons[0].age} />
-        <Person name={this.state.persons[1].name} age={this.state.persons[1].age} >My hobbie is cooking</Person>
-        <Person name={this.state.persons[2].name} age={this.state.persons[2].age}  />
+        <Person
+            name={this.state.persons[0].name}
+            age={this.state.persons[0].age} />
+        <Person
+            name={this.state.persons[1].name}
+            age={this.state.persons[1].age}
+            changed={this.nameChangedHandler}
+        >My hobbie is cooking</Person>
+        <Person
+            name={this.state.persons[2].name}
+            age={this.state.persons[2].age} />
       </div>
     )
   }
