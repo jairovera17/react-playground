@@ -9,6 +9,11 @@ const person = (props) => {
             with: "450px"
         }
     }
+
+    const rnd = Math.random()
+    if(rnd>0.5 ){
+        throw new Error("Something went wrong")
+    }
     const {name, age, click, changed, children} = props
     return (<div className="Person" style={style}>
         <p onClick={click}>I'm a {name} and I am {age} years old</p>
