@@ -1,36 +1,36 @@
 import React, {Component} from 'react';
 import './App.css';
+import Radium, {StyleRoot} from "radium";
 import Person from "./Person/Person"
 
 //container because has state
 class App extends Component {
     state = {
         persons: [
-            {name: "Fulanito", age: 20},
-            {name: "Roberto", age: 23},
-            {name: "Luis", age: 26}
+            {id: "123", name: "Fulanito", age: 20},
+            {id: "234", name: "Roberto", age: 23},
+            {id: "345", name: "Luis", age: 26}
         ],
         showPersons: false
     }
 
-    switchNameHandler = () => {
-        this.setState({
-            persons: [
-                {name: "Lunita", age: 20},
-                {name: "José", age: 23},
-                {name: "Lenovo", age: 26}
-            ]
+    nameChangedHandler = (event, id) => {
+        const personIndex = this.state.persons.findIndex(p => {
+            return p.id === id;
         })
+
+        const person = {...this.state.persons[personIndex]}
+
+        person.name = event.target.value
+        const persons = [...this.state.persons]
+        persons[personIndex] = person
+        this.setState({persons: persons})
     }
 
-    nameChangedHandler = (event) => {
-        this.setState({
-            persons: [
-                {name: "Lunita", age: 20},
-                {name: event.target.value, age: 23},
-                {name: "Lenovo", age: 26}
-            ]
-        })
+    delelePerson = (index) => {
+        const persons = this.state.persons.slice();
+        persons.splice(index, 1);
+        this.setState({persons: persons})
     }
 
     togglePersonsHandler = () => {
@@ -41,39 +41,54 @@ class App extends Component {
 
     render() {
         const style = {
-            backgroundColor: "white",
+            backgroundColor: "green",
+            color: "white",
             font: "inherit",
             border: "1px solid blue",
             padding: "8px",
-            cursor: "pointer"
+            cursor: "pointer",
+            ":hover": {
+                backgroundColor: "lightgreen",
+                color: "black"
+            }
         }
+        let persons = [];
+        if (this.state.showPersons) {
+            persons = (
+                <div>
+                    {
+                        this.state.persons.map((person, index) => {
+                            return <Person
+                                key={person.name}
+                                click={() => this.delelePerson(index)}
+                                changed={(event) => this.nameChangedHandler(event, person.id)}
+                                name={person.name}
+                                age={person.age}/>
+                        })
+                    }
+                </div>
+            )
+            style.backgroundColor = "red";
+        } else {
+            persons = (<div>
+                <h3>Press the button to show persons</h3>
+            </div>)
+        }
+
         return (
-            <div className="App">
-                <h1>Hi i'm in react</h1>
-                <button
-                    style={style}
-                    onClick={this.togglePersonsHandler}>Botón
-                </button>
-                {this.state.showPersons ?
-                    <div>
-                        <Person
-                            name={this.state.persons[0].name}
-                            age={this.state.persons[0].age}/>
-                        <Person
-                            name={this.state.persons[1].name}
-                            age={this.state.persons[1].age}
-                            changed={this.nameChangedHandler}
-                        >My hobbie is cooking</Person>
-                        <Person
-                            name={this.state.persons[2].name}
-                            age={this.state.persons[2].age}/>
-                    </div> : <div>
-                        <h3>Press the button to show persons</h3>
-                    </div>
-                }
-            </div>
+            <StyleRoot>
+                <div className="App">
+                    <h1>Hi i'm in react</h1>
+                    <p>This is really working</p>
+                    <button
+                        style={style}
+                        onClick={this.togglePersonsHandler}>Botón
+                    </button>
+                    {persons}
+                </div>
+            </StyleRoot>
         )
     }
 }
 
-export default App
+export default Radium(App)
