@@ -6,13 +6,23 @@ import ErrorBoundary from "./ErrorBoundary/ErrorBoundary";
 
 //container because has state
 class App extends Component {
-    state = {
-        persons: [
-            {id: "123", name: "Fulanito", age: 20},
-            {id: "234", name: "Roberto", age: 23},
-            {id: "345", name: "Luis", age: 26}
-        ],
-        showPersons: false
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            persons: [
+                {id: "123", name: "Fulanito", age: 20},
+                {id: "234", name: "Roberto", age: 23},
+                {id: "345", name: "Luis", age: 26}
+            ],
+            showPersons: false
+        }
+        console.log("constructor");
+    }
+
+    static getDerivedStateFromProps(props, state){
+        console.log("getDerivedStateFromProps", props, state);
+        return state;
     }
 
     nameChangedHandler = (event, id) => {
@@ -59,12 +69,12 @@ class App extends Component {
                 <div>
                     {
                         this.state.persons.map((person, index) => {
-                            return <ErrorBoundary><Person
+                            return <Person
                                 key={person.name}
                                 click={() => this.delelePerson(index)}
                                 changed={(event) => this.nameChangedHandler(event, person.id)}
                                 name={person.name}
-                                age={person.age}/></ErrorBoundary>
+                                age={person.age}/>
                         })
                     }
                 </div>
